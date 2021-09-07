@@ -1,4 +1,5 @@
 using Ecommerce.Data;
+using Ecommerce.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,7 +36,7 @@ namespace Ecommerce
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
-            services.AddApiVersioning();
+            services.AddScoped<IProductTypesRepository, SQLProductTypesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

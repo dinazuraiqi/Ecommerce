@@ -1,8 +1,5 @@
 ﻿﻿@using Ecommerce.Models;
-@model IEnumerable<Ecommerce.Models.ProductTypes>
-
-
-
+@model IEnumerable<ProductTypes>
 
 
 @{
@@ -26,17 +23,47 @@
     <table class="table table-striped border">
         <tr class="table-info">
             <th>
-               @Html.DisplayNameFor(c => c.ProductType)
-            </th>
-            <th></th>
-            <th></th>
-         </tr>
+
+@Html.DisplayNameFor(c => c.ProductType)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+
 
 @foreach (var item in Model)
-        {
+  {
+    <tr>
+        <td>@item.ProductType</td>
+                <td>
+                    <partial name="_ButtonPartial" model="@item.Id" />
+                </td>
+        </tr>
 
-}
+  }
 </table>
 </div>
+
+
+@section scripts{
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var save = '@TempData["save"]'
+            if(save!='') {
+                alertify.success(save);
+            }
+            var edit = '@TempData["edit"]'
+            if(edit!='') {
+                alertify.success(edit);
+            }
+            var del = '@TempData["delete"]'
+            if (del!='') {
+                alertify.error(del);
+            }
+        })
+    </script>
+
+}
 
 
