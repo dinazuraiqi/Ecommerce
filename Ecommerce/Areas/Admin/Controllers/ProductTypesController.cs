@@ -10,20 +10,18 @@ namespace Ecommerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductTypesController : Controller
-    {
+    {       
         
-        private ApplicationDbContext _db;
-        private IProductTypesRepository _productTypesRepository;
+        private IProductTypeRepository _productTypeRepository;
 
-        public ProductTypesController(ApplicationDbContext db, IProductTypesRepository productTypesRepository)
-        {
-            _db = db;
-            _productTypesRepository = productTypesRepository;
+        public ProductTypesController(IProductTypeRepository productTypeRepository)
+        {           
+            _productTypeRepository = productTypeRepository;
         }
 
         public IActionResult Index()
         {
-            return View(_productTypesRepository.GetAllProductTypes());
+            return View(_productTypeRepository.GetAllProductTypes());
         }
 
         public ActionResult Create()
@@ -33,21 +31,21 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductTypes productTypes)
+        public async Task<IActionResult> Create(ProductType productType)
         {
             if (ModelState.IsValid)
             {                
-                _productTypesRepository.Add(productTypes);
+                _productTypeRepository.Add(productType);
                 TempData["save"] = "Product type has been saved";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(productTypes);
+            return View(productType);
         }
 
         public ActionResult Edit(int id)
         {         
-            var productType = _productTypesRepository.GetProductTypes(id);
+            var productType = _productTypeRepository.GetProductType(id);
             if (productType == null)
             {
                 return NotFound();
@@ -57,21 +55,21 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProductTypes productTypes)
+        public async Task<IActionResult> Edit(ProductType productType)
         {
             if (ModelState.IsValid)
             {
-                _productTypesRepository.Update(productTypes);
+                _productTypeRepository.Update(productType);
                 TempData["edit"] = "Product type has been updated";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(productTypes);
+            return View(productType);
         }
 
         public ActionResult Details(int id)
         {            
-            var productType = _productTypesRepository.GetProductTypes(id);
+            var productType = _productTypeRepository.GetProductType(id);
             if (productType == null)
             {
                 return NotFound();
@@ -81,7 +79,7 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Details(ProductTypes productTypes)
+        public IActionResult Details(ProductType productType)
         {
             return RedirectToAction(nameof(Index));
 
@@ -89,7 +87,7 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         public ActionResult Delete(int id)
         {            
-            var productType = _productTypesRepository.GetProductTypes(id);
+            var productType = _productTypeRepository.GetProductType(id);
             if (productType == null)
             {
                 return NotFound();
@@ -99,26 +97,26 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, ProductTypes productTypes)
+        public async Task<IActionResult> Delete(int id, ProductType productType)
         {            
-            if (id != productTypes.Id)
+            if (id != productType.Id)
             {
                 return NotFound();
             }
 
-            var productType = _productTypesRepository.GetProductTypes(id);
+            productType = _productTypeRepository.GetProductType(id);
             if (productType == null)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                _productTypesRepository.Delete(id);
+                _productTypeRepository.Delete(id);
                 TempData["delete"] = "Product type has been deleted";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(productTypes);
+            return View(productType);
         }
 
 

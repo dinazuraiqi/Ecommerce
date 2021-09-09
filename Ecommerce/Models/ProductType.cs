@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Models
 {
-    public class ProductTypes
+    public class ProductType
     {
         public int Id { get; set; }
         [Required]
         [Display(Name = "Product Type")]
-        public string ProductType { get; set; }
-
+        public string Type { get; set; }
     }
 }
