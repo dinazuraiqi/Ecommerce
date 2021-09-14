@@ -32,7 +32,7 @@ namespace Ecommerce.Models
             return specialTag;
         }
 
-        public IEnumerable<SpecialTag> GetAllSpecialTag()
+        public IEnumerable<SpecialTag> GetAllSpecialTags()
         {
             return context.SpecialTags;
         }

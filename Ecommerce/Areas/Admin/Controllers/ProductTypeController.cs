@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace Ecommerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductTypesController : Controller
+    public class ProductTypeController : Controller
     {       
         
         private IProductTypeRepository _productTypeRepository;
 
-        public ProductTypesController(IProductTypeRepository productTypeRepository)
+        public ProductTypeController(IProductTypeRepository productTypeRepository)
         {           
             _productTypeRepository = productTypeRepository;
         }

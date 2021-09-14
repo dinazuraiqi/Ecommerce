@@ -17,7 +17,7 @@ namespace Ecommerce.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            return View(_specialTagRepository.GetAllSpecialTag());
+            return View(_specialTagRepository.GetAllSpecialTags());
         }
 
         public ActionResult Create()
@@ -32,7 +32,7 @@ namespace Ecommerce.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _specialTagRepository.Add(specialTag);
-                TempData["save"] = "Tag type has been saved";
+                TempData["save"] = "Tag has been saved";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -56,7 +56,7 @@ namespace Ecommerce.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _specialTagRepository.Update(specialTag);
-                TempData["edit"] = "Tag type has been updated";
+                TempData["edit"] = "Tag has been updated";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -108,7 +108,7 @@ namespace Ecommerce.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _specialTagRepository.Delete(id);
-                TempData["delete"] = "Tag type has been deleted";
+                TempData["delete"] = "Tag has been deleted";
                 return RedirectToAction(nameof(Index));
             }
 

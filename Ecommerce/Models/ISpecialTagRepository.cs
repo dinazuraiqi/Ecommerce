@@ -8,7 +8,7 @@ namespace Ecommerce.Models
     public interface ISpecialTagRepository
     {
         SpecialTag GetSpecialTag(int Id);
-        IEnumerable<SpecialTag> GetAllSpecialTag();
+        IEnumerable<SpecialTag> GetAllSpecialTags();
         SpecialTag Add(SpecialTag specialTag);
         SpecialTag Update(SpecialTag specialTagChanges);
         SpecialTag Delete(int Id);
