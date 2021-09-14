@@ -89,6 +89,22 @@ namespace Ecommerce.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ActionName("Remove")]
+        public IActionResult RemoveFromCart(int? id)
+        {
+            List<Product> products = HttpContext.Session.Get<List<Product>>("products");
+            if (products != null)
+            {
+                var product = products.FirstOrDefault(p => p.Id == id);
+                if (product != null)
+                {
+                    products.Remove(product);
+                    HttpContext.Session.Set("products", products);
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult Cart()
         {
             List<Product> products = HttpContext.Session.Get<List<Product>>("products");
