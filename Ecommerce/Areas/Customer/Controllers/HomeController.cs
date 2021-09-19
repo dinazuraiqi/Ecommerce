@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
+using X.PagedList;
 
 namespace Ecommerce.Controllers
 {
@@ -24,9 +24,9 @@ namespace Ecommerce.Controllers
             _productRepository = productRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            return View(_productRepository.GetAllProducts());
+            return View(_productRepository.GetAllProducts().ToPagedList(page ?? 1, 9));
         }
 
         public IActionResult Privacy()

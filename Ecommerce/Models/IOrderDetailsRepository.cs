@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Models
 {
-    interface IOrderDetailsRepository
+    public interface IOrderDetailsRepository
     {
         OrderDetails GetOrderDEtails(int Id);
         IEnumerable<OrderDetails> GetAllOrdersDetails();

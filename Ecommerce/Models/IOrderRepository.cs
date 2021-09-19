@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Models
 {
-    interface IOrderRepository
+    public interface IOrderRepository
     {
         Order GetOrder(int Id);
         IEnumerable<Order> GetAllOrders();
