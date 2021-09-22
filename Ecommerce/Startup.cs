@@ -41,6 +41,7 @@ namespace Ecommerce
             services.AddScoped<IProductRepository, SQLProductRepository>();
             services.AddScoped<IOrderRepository, SQLOrderRepository>();
             services.AddScoped<IOrderDetailsRepository, SQLOrderDetailsRepository>();
+            services.AddScoped<IApplicationUserRepository, SQLApplicationUserRepository>();
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
