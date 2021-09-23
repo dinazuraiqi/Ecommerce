@@ -44,16 +44,11 @@ namespace Ecommerce.Models
         public async Task<IdentityResult> Add(ApplicationUser user)
         {
             IdentityResult result = new IdentityResult();
-            ApplicationUser userToAdd = context.ApplicationUsers.Find(user.Id);
-            if (userToAdd != null)
+            result = await _userManager.CreateAsync(user, user.PasswordHash);
+            if (result.Succeeded)
             {
-                result = await _userManager.CreateAsync(user, user.PasswordHash);
-                if (result.Succeeded)
-                {
-                    var isSaveRole = await _userManager.AddToRoleAsync(user, "User");
-                }
+                //var isSaveRole = await _userManager.AddToRoleAsync(user, "User");
             }
-
             return result;
         }
 

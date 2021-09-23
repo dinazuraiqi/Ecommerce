@@ -33,8 +33,8 @@ namespace Ecommerce
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddScoped<IProductTypeRepository, SQLProductTypeRepository>();
             services.AddScoped<ISpecialTagRepository, SQLSpecialTagRepository>();
@@ -50,6 +50,8 @@ namespace Ecommerce
                 // Make the session cookie essential
                 options.Cookie.IsEssential = true;
             });
+            services.AddIdentity<IdentityUser, IdentityRole>()
+               .AddEntityFrameworkStores<ApplicationDbContext>();
 
         }
 
@@ -81,7 +83,7 @@ namespace Ecommerce
                 endpoints.MapControllerRoute(
                     name: "areas",                    
                     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                //endpoints.MapRazorPages();
             });
 
 
