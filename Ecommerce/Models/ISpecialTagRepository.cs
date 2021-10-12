@@ -9,8 +9,8 @@ namespace Ecommerce.Models
     {
         SpecialTag GetSpecialTag(int Id);
         IEnumerable<SpecialTag> GetAllSpecialTags();
-        SpecialTag Add(SpecialTag specialTag);
-        SpecialTag Update(SpecialTag specialTagChanges);
-        SpecialTag Delete(int Id);
+        Task<Result> Add(SpecialTag specialTag);
+        Task<Result> Update(SpecialTag specialTagChanges);
+        Task<Result> Delete(int Id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin")]    
     public class ProductController : Controller
     {
         
@@ -28,7 +29,7 @@ namespace Ecommerce.Areas.Admin.Controllers
             _specialTagRepository = specialTagRepository;
             _he = he;
         }
-
+                
         public IActionResult Index()
         {
             return View(_productRepository.GetAllProducts());
@@ -73,29 +74,32 @@ namespace Ecommerce.Areas.Admin.Controllers
                 {
                     product.Image = "Images/noimage.PNG";
                 }
-                _productRepository.Add(product);
-                TempData["save"] = "Product has been saved";
-                return RedirectToAction(nameof(Index));
+                var result =await _productRepository.Add(product);
+                if (result.Success == true)
+                {
+                    TempData["save"] = "Product has been saved";
+                    return RedirectToAction(nameof(Index));
+                }                
             }
 
             return View(product);
         }
 
         public ActionResult Edit(int id)
-        {
-            ViewData["productTypeId"] = new SelectList(_productTypeRepository.GetAllProductTypes(), "Id", "Type");
-            ViewData["TagId"] = new SelectList(_specialTagRepository.GetAllSpecialTags(), "Id", "Name");
-            
+        {                       
             var product = _productRepository.GetProduct(id);
             if (product == null)
             {
                 return NotFound();
             }
+
+            ViewData["productTypeId"] = new SelectList(_productTypeRepository.GetAllProductTypes(), "Id", "Type");
+            ViewData["TagId"] = new SelectList(_specialTagRepository.GetAllSpecialTags(), "Id", "Name");
             return View(product);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Product products, IFormFile image)
+        public async Task<IActionResult> Edit(Product product, IFormFile image)
         {
             if (ModelState.IsValid)
             {
@@ -103,19 +107,23 @@ namespace Ecommerce.Areas.Admin.Controllers
                 {
                     var name = Path.Combine(_he.WebRootPath + "/Images", Path.GetFileName(image.FileName));
                     await image.CopyToAsync(new FileStream(name, FileMode.Create));
-                    products.Image = "Images/" + image.FileName;
+                    product.Image = "Images/" + image.FileName;
                 }
 
                 if (image == null)
                 {
-                    products.Image = "Images/noimage.PNG";
+                    product.Image = "Images/noimage.PNG";
                 }
-                _productRepository.Update(products);
-                TempData["edit"] = "Product has been updated";
-                return RedirectToAction(nameof(Index));
+                var result = await _productRepository.Update(product);
+                if (result.Success == true)
+                {
+                    TempData["edit"] = "Product has been updated";
+                    return RedirectToAction(nameof(Index));
+                }
+                
             }
 
-            return View(products);
+            return View(product);
         }
 
         public ActionResult Details(int id)
@@ -131,14 +139,14 @@ namespace Ecommerce.Areas.Admin.Controllers
         }
 
         public ActionResult Delete(int id)
-        {
-            ViewData["productTypeId"] = new SelectList(_productTypeRepository.GetAllProductTypes(), "Id", "Type");
-            ViewData["TagId"] = new SelectList(_specialTagRepository.GetAllSpecialTags(), "Id", "Name");
+        {           
             var product = _productRepository.GetProduct(id);
             if (product == null)
             {
                 return NotFound();
             }
+            ViewData["productTypeId"] = new SelectList(_productTypeRepository.GetAllProductTypes(), "Id", "Type");
+            ViewData["TagId"] = new SelectList(_specialTagRepository.GetAllSpecialTags(), "Id", "Name");
             return View(product);
         }
 
@@ -146,15 +154,18 @@ namespace Ecommerce.Areas.Admin.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
-            var product = _productRepository.GetProduct(id);
-            if (product == null)
+            var result =await _productRepository.Delete(id);
+            if (result.ResultObject == null)
             {
                 return NotFound();
             }
 
-            _productRepository.Delete(id);
-            TempData["delete"] = "Product has been deleted";
-            return RedirectToAction(nameof(Index));
+            if (result.Success == true)
+            {
+                TempData["delete"] = "Product has been deleted";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(result.ResultObject);
         }
 
 

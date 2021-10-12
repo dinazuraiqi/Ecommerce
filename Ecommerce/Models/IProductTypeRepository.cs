@@ -9,8 +9,8 @@ namespace Ecommerce.Models
     {
         ProductType GetProductType(int Id);
         IEnumerable<ProductType> GetAllProductTypes();
-        ProductType Add(ProductType productType);
-        ProductType Update(ProductType productTypeChanges);
-        ProductType Delete(int Id);
+        Task<Result> Add(ProductType productType);
+        Task<Result> Update(ProductType productTypeChanges);
+        Task<Result> Delete(int Id);
     }
 }

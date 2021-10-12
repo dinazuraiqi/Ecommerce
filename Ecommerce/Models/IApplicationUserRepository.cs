@@ -8,9 +8,10 @@ namespace Ecommerce.Models
 {
     public interface IApplicationUserRepository
     {
-        ApplicationUser GetUser(int Id);
-        ApplicationUser GetUser(string name);
+        ApplicationUser GetUser(string Id);
+        ApplicationUser GetUserByName(string name);
         IEnumerable<ApplicationUser> GetAllUsers();
+        IEnumerable<ApplicationUser> GetActiveUsers();
         Task<IdentityResult> Add(ApplicationUser user);
         Task<IdentityResult> Update(ApplicationUser userChanges);
         Result Delete(ApplicationUser user);

@@ -14,22 +14,48 @@ namespace Ecommerce.Models
         {
             this.context = context;
         }
-        public Order Add(Order order)
+        public async Task<Result> Add(Order order)
         {
-            context.Orders.Add(order);
-            context.SaveChanges();
-            return order;
+            Result result = new Result();
+            try
+            {
+                Order orderExist = context.Orders.Find(order.Id);
+                if (orderExist == null)
+                {
+                    context.Orders.Add(order);
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = order;
+                }                
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            
+            return result;
         }
 
-        public Order Delete(int Id)
+        public async Task<Result> Delete(int Id)
         {
-            Order order = context.Orders.Find(Id);
-            if (order != null)
+            Result result = new Result();
+            try
             {
-                context.Orders.Remove(order);
-                context.SaveChanges();
+                Order order = context.Orders.Find(Id);
+                if (order != null)
+                {
+                    result.ResultObject = order;
+                    context.Orders.Remove(order);
+                    await context.SaveChangesAsync();
+                    result.Success = true;                   
+                }
             }
-            return order;
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            
+            return result; ;
         }
 
         public IEnumerable<Order> GetAllOrders()
@@ -42,12 +68,26 @@ namespace Ecommerce.Models
             return context.Orders.Find(Id);
         }
 
-        public Order Update(Order orderChanges)
+        public async Task<Result> Update(Order orderChanges)
         {
-            var order = context.Orders.Attach(orderChanges);
-            order.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            context.SaveChanges();
-            return orderChanges;
+            Result result = new Result();
+            try
+            {
+                var order = context.Orders.Attach(orderChanges);
+                if (order != null)
+                {
+                    order.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = orderChanges;
+                }                
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }          
+            
+            return result;
         }
     }
 }

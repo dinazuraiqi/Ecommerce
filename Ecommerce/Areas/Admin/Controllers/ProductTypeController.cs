@@ -35,9 +35,12 @@ namespace Ecommerce.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {                
-                _productTypeRepository.Add(productType);
-                TempData["save"] = "Product type has been saved";
-                return RedirectToAction(nameof(Index));
+                var result =await _productTypeRepository.Add(productType);
+                if (result.Success == true)
+                {
+                    TempData["save"] = "Product type has been saved";
+                    return RedirectToAction(nameof(Index));
+                }                
             }
 
             return View(productType);
@@ -59,9 +62,12 @@ namespace Ecommerce.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _productTypeRepository.Update(productType);
-                TempData["edit"] = "Product type has been updated";
-                return RedirectToAction(nameof(Index));
+                var result = await _productTypeRepository.Update(productType);
+                if (result.Success == true)
+                {
+                    TempData["edit"] = "Product type has been updated";
+                    return RedirectToAction(nameof(Index));
+                }               
             }
 
             return View(productType);
@@ -84,7 +90,7 @@ namespace Ecommerce.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
+        
         public ActionResult Delete(int id)
         {            
             var productType = _productTypeRepository.GetProductType(id);
@@ -97,26 +103,22 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, ProductType productType)
-        {            
-            if (id != productType.Id)
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirm(int id)
+        {
+            var result = await _productTypeRepository.Delete(id);
+            if (result.ResultObject == null)
             {
                 return NotFound();
             }
-
-            productType = _productTypeRepository.GetProductType(id);
-            if (productType == null)
+            if (result.Success == true)
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                _productTypeRepository.Delete(id);
                 TempData["delete"] = "Product type has been deleted";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(productType);
+            return View(result.ResultObject);
+
         }
 
 

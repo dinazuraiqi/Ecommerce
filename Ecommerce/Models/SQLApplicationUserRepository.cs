@@ -1,9 +1,15 @@
-﻿using Ecommerce.Data;
+﻿using Ecommerce.Areas.Identity.Pages.Account;
+using Ecommerce.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Ecommerce.Models
 {
@@ -11,10 +17,17 @@ namespace Ecommerce.Models
     {
         private readonly ApplicationDbContext context;
         UserManager<IdentityUser> _userManager;
-        public SQLApplicationUserRepository(UserManager<IdentityUser> userManager, ApplicationDbContext context)
+        private readonly ILogger<RegisterModel> _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        public SQLApplicationUserRepository(UserManager<IdentityUser> userManager,
+            ApplicationDbContext context,
+            ILogger<RegisterModel> logger,
+            SignInManager<IdentityUser> signInManager)
         {
             this.context = context;
             _userManager = userManager;
+            _logger = logger;
+            _signInManager = signInManager;
         }
         public Result Active(ApplicationUser user)
         {
@@ -26,16 +39,13 @@ namespace Ecommerce.Models
                 {
                     result.ResultObject = userToActive;
                     userToActive.LockoutEnd = DateTime.Now.AddDays(-1);
-                    int rowAffected = context.SaveChanges();
-                    if (rowAffected > 0)
-                    {
-                        result.Success = true;                        
-                    }
+                    context.SaveChanges();
+                    result.Success = true;
                 }
             }
             catch(Exception e)
             {
-                result.Error = e.Message;
+                result.ErrorMessage = e.Message;
             }
                                                   
             return result;
@@ -44,10 +54,17 @@ namespace Ecommerce.Models
         public async Task<IdentityResult> Add(ApplicationUser user)
         {
             IdentityResult result = new IdentityResult();
+            user.Email = user.UserName;
             result = await _userManager.CreateAsync(user, user.PasswordHash);
             if (result.Succeeded)
             {
                 //var isSaveRole = await _userManager.AddToRoleAsync(user, "User");
+            }
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");                            
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
             }
             return result;
         }
@@ -61,17 +78,14 @@ namespace Ecommerce.Models
                 if (userToDelete != null)
                 {
                     result.ResultObject = userToDelete;
-                    context.ApplicationUsers.Remove(user);
-                    int rowAffected = context.SaveChanges();
-                    if (rowAffected > 0)
-                    {
-                        result.Success = true;                        
-                    }
+                    context.ApplicationUsers.Remove(userToDelete);
+                    context.SaveChanges();
+                    result.Success = true;
                 }                
             }
             catch (Exception e)
             {
-                result.Error = e.Message;
+                result.ErrorMessage = e.Message;
             }
             
             return result;
@@ -82,12 +96,17 @@ namespace Ecommerce.Models
             return context.ApplicationUsers;
         }
 
-        public ApplicationUser GetUser(int Id)
+        public IEnumerable<ApplicationUser> GetActiveUsers()
+        {
+            return context.ApplicationUsers.Where(f => f.LockoutEnd < DateTime.Now || f.LockoutEnd == null).ToList();
+        }
+
+        public ApplicationUser GetUser(string Id)
         {
             return context.ApplicationUsers.Find(Id);
         }
 
-        public ApplicationUser GetUser(string name)
+        public ApplicationUser GetUserByName(string name)
         {
             return context.ApplicationUsers.FirstOrDefault(c => c.UserName == name);
         }
@@ -102,16 +121,13 @@ namespace Ecommerce.Models
                 {
                     result.ResultObject = userToActive;
                     userToActive.LockoutEnd = DateTime.Now.AddYears(100);
-                    int rowAffected = context.SaveChanges();
-                    if (rowAffected > 0)
-                    {
-                        result.Success = true;
-                    }
+                    context.SaveChanges();
+                    result.Success = true;
                 }
             }
             catch (Exception e)
             {
-                result.Error = e.Message;
+                result.ErrorMessage = e.Message;
             }
 
             return result;

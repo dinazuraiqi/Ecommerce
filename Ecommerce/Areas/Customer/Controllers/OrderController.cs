@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Models;
 using Ecommerce.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Areas.Customer.Controllers
 {
-    [Area("Customer")]
+    [Area("Customer")]    
     public class OrderController : Controller
     {
         private IOrderDetailsRepository _orderDetailsRepository;
@@ -19,7 +20,7 @@ namespace Ecommerce.Areas.Customer.Controllers
         {
             _orderDetailsRepository = orderDetailsRepository;
             _orderRepository = orderRepository;
-        }
+        }        
         public IActionResult Checkout()
         {
             return View();
@@ -42,7 +43,7 @@ namespace Ecommerce.Areas.Customer.Controllers
             }
 
             order.OrderNo = GetOrderNo();
-            _orderRepository.Add(order);
+            await _orderRepository.Add(order);
            
             HttpContext.Session.Set("products", new List<Product>());
             return View();

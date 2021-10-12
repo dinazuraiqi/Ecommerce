@@ -14,22 +14,46 @@ namespace Ecommerce.Models
         {
             this.context = context;
         }
-        public ProductType Add(ProductType productType)
+        public async Task<Result> Add(ProductType productType)
         {
-            context.ProductTypes.Add(productType);
-            context.SaveChanges();
-            return productType;
+            Result result = new Result();
+            try
+            {
+                ProductType productTypeExist = context.ProductTypes.Find(productType.Id);
+                if (productTypeExist == null)
+                {
+                    context.ProductTypes.Add(productType);
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = productType;
+                }                
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            return result;
         }
 
-        public ProductType Delete(int Id)
+        public async Task<Result> Delete(int Id)
         {
-            ProductType productType = context.ProductTypes.Find(Id);
-            if (productType != null)
+            Result result = new Result();
+            try
             {
-                context.ProductTypes.Remove(productType);
-                context.SaveChanges();
+                ProductType productType = context.ProductTypes.Find(Id);
+                if (productType != null)
+                {
+                    result.ResultObject = productType;
+                    context.ProductTypes.Remove(productType);
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                }
             }
-            return productType;
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            return result;
         }
 
         public IEnumerable<ProductType> GetAllProductTypes()
@@ -42,12 +66,25 @@ namespace Ecommerce.Models
             return context.ProductTypes.Find(Id);
         }
 
-        public ProductType Update(ProductType productTypeChanges)
+        public async Task<Result> Update(ProductType productTypeChanges)
         {
-            var productType = context.ProductTypes.Attach(productTypeChanges);
-            productType.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            context.SaveChanges();
-            return productTypeChanges;
+            Result result = new Result();
+            try
+            {
+                var productType = context.ProductTypes.Attach(productTypeChanges);
+                if (productType != null)
+                {
+                    productType.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = productTypeChanges;
+                }                
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            return result;
         }
     }
 }

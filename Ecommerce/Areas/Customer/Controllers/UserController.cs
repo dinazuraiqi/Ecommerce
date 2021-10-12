@@ -1,9 +1,13 @@
 ﻿using Ecommerce.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace Ecommerce.Areas.Customer.Controllers
@@ -13,10 +17,14 @@ namespace Ecommerce.Areas.Customer.Controllers
     {
         UserManager<IdentityUser> _userManager;
         IApplicationUserRepository _applicationUserRepository;
-        public UserController(UserManager<IdentityUser> userManager, IApplicationUserRepository applicationUserRepository)
+        private readonly IEmailSender _emailSender;
+        public UserController(UserManager<IdentityUser> userManager,
+            IApplicationUserRepository applicationUserRepository,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _applicationUserRepository = applicationUserRepository;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -30,13 +38,24 @@ namespace Ecommerce.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ApplicationUser user)
+        public async Task<IActionResult> Create(ApplicationUser user, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
                 var result = await _applicationUserRepository.Add(user);
                 if (result.Succeeded)
                 {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                        protocol: Request.Scheme);                  
+
+                    await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
+                       $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>.");
+
                     TempData["save"] = "User has been created successfully";
                     return RedirectToAction(nameof(Index));
                 }

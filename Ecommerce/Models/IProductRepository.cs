@@ -11,8 +11,8 @@ namespace Ecommerce.Models
         Product GetProduct(string name);
         IEnumerable<Product> GetAllProducts();
         IEnumerable<Product> GetAllProducts(decimal? lowAmount, decimal? largeAmount);
-        Product Add(Product product);
-        Product Update(Product productChanges);
-        Product Delete(int Id);
+        Task<Result> Add(Product product);
+        Task<Result> Update(Product productChanges);
+        Task<Result> Delete(int Id);
     }
 }

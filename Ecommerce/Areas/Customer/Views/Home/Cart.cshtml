@@ -11,6 +11,7 @@
             <tr>
                 <th>Image</th>
                 <th>Name</th>
+                <th>Quantity</th>
                 <th>Price</th>
                 <th>Product Type</th>
                 <th>Color</th>
@@ -25,7 +26,8 @@
         <img src="~/@item.Image" width="200px" height="150px" />
     </td>
     <td>@item.Name</td>
-    <td>@item.Price</td>
+    <td><input id="qty" type="text" value="1" style="text-align:center" oninput="calculatePrice()" /></td>
+    <td id="price">@item.Price</td>
     <td>@item.ProductType.Type</td>
     <td>@item.ProductColor</td>
     <td>
@@ -47,4 +49,14 @@
         <a asp-area="Customer" asp-action="Checkout" asp-controller="Order" class="btn btn-info">Process to Checkout</a>
     </div>
 </div>
+
+<script>
+    function calculatePrice() {
+        var qty = document.getElementById("qty").value
+        var price = document.getElementById("price").value
+        var result = qty * price
+        document.getElementById("price").innerHTML = result
+    }
+    
+</script>
 

@@ -9,8 +9,8 @@ namespace Ecommerce.Models
     {
         Order GetOrder(int Id);
         IEnumerable<Order> GetAllOrders();
-        Order Add(Order order);
-        Order Update(Order orderChanges);
-        Order Delete(int Id);
+        Task<Result> Add(Order order);
+        Task<Result> Update(Order orderChanges);
+        Task<Result> Delete(int Id);
     }
 }

@@ -14,22 +14,47 @@ namespace Ecommerce.Models
         {
             this.context = context;
         }
-        public SpecialTag Add(SpecialTag specialTag)
+        public async Task<Result> Add(SpecialTag specialTag)
         {
-            context.SpecialTags.Add(specialTag);
-            context.SaveChanges();
-            return specialTag;
+            Result result = new Result();
+            try
+            {
+                SpecialTag specialTagExist = context.SpecialTags.Find(specialTag.Id);
+                if(specialTagExist == null)
+                {
+                    context.SpecialTags.Add(specialTag);
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = specialTag;
+                }                
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+           
+            return result;
         }
 
-        public SpecialTag Delete(int Id)
+        public async Task<Result> Delete(int Id)
         {
-            SpecialTag specialTag = context.SpecialTags.Find(Id);
-            if (specialTag != null)
+            Result result = new Result();
+            try
             {
-                context.SpecialTags.Remove(specialTag);
-                context.SaveChanges();
+                SpecialTag specialTag = context.SpecialTags.Find(Id);
+                if (specialTag != null)
+                {
+                    context.SpecialTags.Remove(specialTag);
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = specialTag;
+                }
             }
-            return specialTag;
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }           
+            return result;
         }
 
         public IEnumerable<SpecialTag> GetAllSpecialTags()
@@ -42,12 +67,26 @@ namespace Ecommerce.Models
             return context.SpecialTags.Find(Id);
         }
 
-        public SpecialTag Update(SpecialTag specialTagChanges)
+        public async Task<Result> Update(SpecialTag specialTagChanges)
         {
-            var specialTag = context.SpecialTags.Attach(specialTagChanges);
-            specialTag.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            context.SaveChanges();
-            return specialTagChanges;
+            Result result = new Result();
+            try
+            {
+                var specialTag = context.SpecialTags.Attach(specialTagChanges);
+                if(specialTag != null)
+                {
+                    specialTag.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = specialTagChanges;
+                }                
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            
+            return result;
         }
     }
 }

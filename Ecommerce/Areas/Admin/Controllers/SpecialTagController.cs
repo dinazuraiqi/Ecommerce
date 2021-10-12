@@ -31,9 +31,12 @@ namespace Ecommerce.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _specialTagRepository.Add(specialTag);
-                TempData["save"] = "Tag has been saved";
-                return RedirectToAction(nameof(Index));
+                var result = await _specialTagRepository.Add(specialTag);
+                if(result.Success == true)
+                {
+                    TempData["save"] = "Tag has been saved";
+                    return RedirectToAction(nameof(Index));
+                }                
             }
 
             return View(specialTag);
@@ -55,9 +58,12 @@ namespace Ecommerce.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _specialTagRepository.Update(specialTag);
-                TempData["edit"] = "Tag has been updated";
-                return RedirectToAction(nameof(Index));
+                var result = await _specialTagRepository.Update(specialTag);
+                if (result.Success == true)
+                {
+                    TempData["edit"] = "Tag has been updated";
+                    return RedirectToAction(nameof(Index));
+                }                
             }
 
             return View(specialTag);
@@ -93,26 +99,21 @@ namespace Ecommerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, SpecialTag specialTag)
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirm(int id)
         {
-            if (id != specialTag.Id)
+            var result = await _specialTagRepository.Delete(id);
+            if (result.ResultObject == null)
             {
                 return NotFound();
             }
-
-           specialTag = _specialTagRepository.GetSpecialTag(id);
-            if (specialTag == null)
+            if (result.Success == true)
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                _specialTagRepository.Delete(id);
                 TempData["delete"] = "Tag has been deleted";
                 return RedirectToAction(nameof(Index));
-            }
-
-            return View(specialTag);
+            } 
+            
+            return View(result.ResultObject);
         }
 
     }

@@ -9,28 +9,54 @@ namespace Ecommerce.Models
 {
     public class SQLProductRepository : IProductRepository
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext context;        
 
         public SQLProductRepository(ApplicationDbContext context)
         {
-            this.context = context;
+            this.context = context;           
         }
-        public Product Add(Product product)
+        public async Task<Result> Add(Product product)
         {
-            context.Products.Add(product);
-            context.SaveChanges();
-            return product;
+            Result result = new Result();
+            try
+            {
+                var searchProduct = context.Products.FirstOrDefault(p => p.Name == product.Name);
+                if (searchProduct == null)
+                {                   
+                    context.Products.Add(product);
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                    result.ResultObject = product;
+                }                               
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+           
+            return result;
         }
 
-        public Product Delete(int Id)
+        public async Task<Result> Delete(int Id)
         {
-            Product product = context.Products.Find(Id);
-            if (product != null)
+            Result result = new Result();
+            try
             {
-                context.Products.Remove(product);
-                context.SaveChanges();
+                Product product = context.Products.Find(Id);
+                if (product != null)
+                {
+                    result.ResultObject = product;
+                    context.Products.Remove(product);
+                    await context.SaveChangesAsync();
+                    result.Success = true;                    
+                }
             }
-            return product;
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            
+            return result;
         }
 
         public IEnumerable<Product> GetAllProducts()
@@ -63,12 +89,26 @@ namespace Ecommerce.Models
 
         }
 
-        public Product Update(Product productChanges)
+        public async Task<Result> Update(Product productChanges)
         {
-            var product = context.Products.Attach(productChanges);
-            product.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            context.SaveChanges();
-            return productChanges;
+            Result result = new Result();
+            try
+            {
+                var product = context.Products.Attach(productChanges);
+                if (product != null)
+                {
+                    result.ResultObject = productChanges;                                     
+                    product.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    result.Success = true;
+                }
+            }
+            catch(Exception e)
+            {
+                result.ErrorMessage = e.Message;
+            }
+            
+            return result;
         }
     }
 }

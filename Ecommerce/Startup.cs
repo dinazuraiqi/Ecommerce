@@ -1,10 +1,13 @@
+using Ecommerce.Areas.Admin.Models;
 using Ecommerce.Data;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +45,7 @@ namespace Ecommerce
             services.AddScoped<IOrderRepository, SQLOrderRepository>();
             services.AddScoped<IOrderDetailsRepository, SQLOrderDetailsRepository>();
             services.AddScoped<IApplicationUserRepository, SQLApplicationUserRepository>();
+            services.AddScoped<IRoleRepository, SQLRoleRepository>();
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
@@ -51,7 +55,17 @@ namespace Ecommerce
                 options.Cookie.IsEssential = true;
             });
             services.AddIdentity<IdentityUser, IdentityRole>()
-               .AddEntityFrameworkStores<ApplicationDbContext>();
+               .AddEntityFrameworkStores<ApplicationDbContext>()
+               .AddDefaultTokenProviders()
+               .AddDefaultUI();               
+
+            services.AddRazorPages();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = new PathString("/Identity/Account/Login");               
+            });
+
+            services.AddScoped<IEmailSender, EmailSender>();
 
         }
 
@@ -83,7 +97,7 @@ namespace Ecommerce
                 endpoints.MapControllerRoute(
                     name: "areas",                    
                     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapRazorPages();
+                endpoints.MapRazorPages();
             });
 
 
