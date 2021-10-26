@@ -56,6 +56,7 @@ namespace Ecommerce.Controllers
         {
             List<Product> products = new List<Product>();            
             var product = _productRepository.GetProduct(id);
+            product.Quantity = 1;
             if (product == null)
             {
                 return NotFound();
@@ -113,6 +114,13 @@ namespace Ecommerce.Controllers
                 products = new List<Product>();
             }
             return View(products);
+        }
+
+        [HttpPost]       
+        public IActionResult Cart(List<Product> products)
+        {
+            HttpContext.Session.Set("products", products);
+            return RedirectToAction("Checkout", "Order"); 
         }
 
     }

@@ -1,62 +1,122 @@
 ﻿@using Ecommerce.Models
 @model List<Product>
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @{ ViewData["Title"] = "Cart"; }
 
 <h1>Your Cart</h1>
 
 <br />
-<div class="row">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Product Type</th>
-                <th>Color</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-<tr>
-    <td>
-        <img src="~/@item.Image" width="200px" height="150px" />
-    </td>
-    <td>@item.Name</td>
-    <td><input id="qty" type="text" value="1" style="text-align:center" oninput="calculatePrice()" /></td>
-    <td id="price">@item.Price</td>
-    <td>@item.ProductType.Type</td>
-    <td>@item.ProductColor</td>
-    <td>
-        <a asp-area="Customer" asp-action="Remove" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">
-            <i class="fas fa-trash-alt"></i>
-        </a>
-    </td>
-</tr>}
-        </tbody>
-    </table>
-</div>
-<div class="row">
-    <div class="col-6">
-        <a asp-action="Index" asp-controller="Home" class="btn btn-success">Back to Home</a>
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <table id="orders" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Product Type</th>
+                    <th>Color</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @*@foreach (var item in Model)*@
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr onclick="getIndex(this)">
+                        <td>
+                            @*<img src="~/@item.Image" width="200px" height="150px" />*@
+                            <input asp-for="@Model[i].Image" type="hidden" />
+                            <img src="~/@Model[i].Image" width="200px" height="150px" />
+                        </td>
+                        @*<td>@item.Name</td>*@
+                        <td>
+                            <input asp-for="@Model[i].Name" type="hidden" />
+                            @Model[i].Name
+                        </td>
+                        @*<td contenteditable="true" oninput="calculatePrice(@item.Price)">*@
+                        <td oninput="calculatePrice(@Model[i].Price)">
+                            <input asp-for="@Model[i].Quantity" class="form-control" />
+                        </td>
+                        @*<td>@item.Price</td>*@
+                        <td>
+                            <input asp-for="@Model[i].Price" type="hidden" />
+                            @Model[i].Price
+                        </td>
+                        @*<td>@item.ProductType.Type</td>*@
+                        <td>
+                            <input asp-for="@Model[i].ProductType.Type" type="hidden" />
+                            @Model[i].ProductType.Type
+                        </td>
+                        @*<td>@item.ProductColor</td>*@
+                        <td>
+                            <input asp-for="@Model[i].ProductColor" type="hidden" />
+                            @Model[i].ProductColor
+                        </td>
+                        <td>
+                            @*<a asp-area="Customer" asp-action="Remove" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>*@
+                            <a asp-area="Customer" asp-action="Remove" asp-controller="Home" asp-route-id="@Model[i].Id" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-    <div class="col-6 text-right">
-        <h3>Total Amount</h3>
-        <h3>Grant Total : @Model.Sum(c => c.Price) </h3>
-        <a asp-area="Customer" asp-action="Checkout" asp-controller="Order" class="btn btn-info">Process to Checkout</a>
+    <div class="row">
+        <div class="col-6">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-success">Back to Home</a>
+        </div>
+        <div class="form-group col-6 text-right">
+            <h3>Total Amount</h3>
+            <h3 id="total">@Model.Sum(c => c.Price) </h3>
+            @*<a asp-area="Customer" asp-action="Checkout" asp-controller="Order"  class="btn btn-info">Process to Checkout</a>*@
+            <input type="submit" value="Process to Checkout" class="btn btn-info" />
+        </div>
     </div>
-</div>
+</form>
+
 
 <script>
-    function calculatePrice() {
-        var qty = document.getElementById("qty").value
-        var price = document.getElementById("price").value
+    var index = 0
+    var prodId = 0
+    function calculatePrice(price) {        
+        
+        var qty = Number(document.getElementById("orders").rows[index].cells.item(2).children[0].value)
+
         var result = qty * price
-        document.getElementById("price").innerHTML = result
+        document.getElementById("orders").rows[index].cells.item(3).innerHTML = result
+        //document.getElementById("orders").rows[index].cells.item(3).children[0].innerText = result
+        
+
+        //var test = document.getElementById("orders").rows[index].cells.item(3).children[0].value
+       
+
+        calculateTotal()
     }
+
+
+    function getIndex(x) {
+       index= x.rowIndex
+    }
+
+    function calculateTotal() {
+        var total = 0
+        var rows = document.getElementById("orders").rows;
+        for (var i = 1; i < rows.length; i++) {
+            var rowPrice = Number(document.getElementById("orders").rows[i].cells.item(3).innerHTML)
+            total = total + rowPrice
+        }
+
+        document.getElementById("total").innerHTML = total
+        }
+
     
 </script>
 

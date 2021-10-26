@@ -14,6 +14,10 @@ namespace Ecommerce.Models
         public int OrderId { get; set; }
         [Display(Name = "Product")]
         public int PorductId { get; set; }
+        [Required]
+        public int Quantity { get; set; }
+        [Required]
+        public decimal Price { get; set; }
 
         [ForeignKey("OrderId")]
         public Order Order { get; set; }

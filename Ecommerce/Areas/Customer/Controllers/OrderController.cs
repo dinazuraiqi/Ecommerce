@@ -20,7 +20,9 @@ namespace Ecommerce.Areas.Customer.Controllers
         {
             _orderDetailsRepository = orderDetailsRepository;
             _orderRepository = orderRepository;
-        }        
+        }
+
+        
         public IActionResult Checkout()
         {
             return View();

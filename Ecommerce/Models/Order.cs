@@ -17,6 +17,8 @@ namespace Ecommerce.Models
         [Display(Name = "Order No")]
         public string OrderNo { get; set; }
         [Required]
+        public decimal TotalPrice { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         [Display(Name = "Phone No")]
