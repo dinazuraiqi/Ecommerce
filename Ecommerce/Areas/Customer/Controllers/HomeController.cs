@@ -109,6 +109,14 @@ namespace Ecommerce.Controllers
         public IActionResult Cart()
         {
             List<Product> products = HttpContext.Session.Get<List<Product>>("products");
+            foreach (var product in products)
+            {
+                product.TotalPrice = product.Price;
+                if (product.Quantity != 1 )
+                {
+                    product.Price = product.TotalPrice / product.Quantity;
+                }               
+            }
             if (products == null)
             {
                 products = new List<Product>();
@@ -119,6 +127,10 @@ namespace Ecommerce.Controllers
         [HttpPost]       
         public IActionResult Cart(List<Product> products)
         {
+            foreach(var product in products)
+            {
+                product.Price = product.Quantity * product.Price;
+            }
             HttpContext.Session.Set("products", products);
             return RedirectToAction("Checkout", "Order"); 
         }

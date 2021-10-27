@@ -1,0 +1,129 @@
+﻿@model Order
+@using Ecommerce.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{ ViewData["Title"] = "Invoice"; }
+
+@{ List<Product> products = HttpContextAccessor.HttpContext.Session.Get<List<Product>>("products");
+
+    if (products == null)
+    {
+        products = new List<Product>();
+    } }
+
+<h1>Invoice Details</h1>
+
+<br />
+
+<form asp-action="Checkout" method="post" enctype="multipart/form-data">
+    <div class="p-4 rounded border row">
+        <div asp-validation-summary="ModelOnly" class="text-danger">
+
+        </div>
+        <div class="col-6">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-8">
+                    <input type="hidden" asp-for="Id" />
+                    <input asp-for="Name" readonly="readonly" class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="PhoneNo"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="PhoneNo" readonly="readonly" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Address"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Address" readonly="readonly" class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Email"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Email" readonly="readonly" class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="OrderDate"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="OrderDate" readonly="readonly" type="text" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <a asp-action="Index" asp-controller="Home" onclick="clearProducts()" class="btn btn-success">Back to Home</a>
+                </div>
+            </div>
+
+        </div>
+
+            <div class="col-6">
+                <table id="orders" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in products)
+                        {
+            <tr onclick="getIndex(this)">
+                <td>
+                    <img src="~/@item.Image" height="100px" width="150px" />
+                </td>
+                <td>@item.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+            </tr>}
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <h3>Total Price : @products.Sum(c => c.Price)</h3>
+                </div>
+            </div>
+
+
+        </div>
+</form>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>$(document).ready(function() {
+            $("#OrderDate").datepicker({
+                showAnim: "slide",
+                changeMonth: true,
+                changeYear:true
+            });
+
+});
+        function clearProducts() {
+            @{
+                HttpContextAccessor.HttpContext.Session.Set("products", new List<Product>());
+            }
+        }
+
+    </script>
+
+}
+

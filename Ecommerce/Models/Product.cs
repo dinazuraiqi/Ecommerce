@@ -14,6 +14,7 @@ namespace Ecommerce.Models
         public string Name { get; set; }
         [Required]
         public decimal Price { get; set; }
+        public decimal TotalPrice { get; set; }
         public int Quantity { get; set; }
         public string Image { get; set; }
         [Display(Name = "Product Color")]
