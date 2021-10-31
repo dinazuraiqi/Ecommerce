@@ -20,12 +20,11 @@ using System.Threading.Tasks;
 namespace Ecommerce
 {
     public class Startup
-    {
+    {        
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration;            
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -57,7 +56,7 @@ namespace Ecommerce
             services.AddIdentity<IdentityUser, IdentityRole>()
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders()
-               .AddDefaultUI();               
+               .AddDefaultUI();                          
 
             services.AddRazorPages();
             services.ConfigureApplicationCookie(options =>
@@ -90,13 +89,14 @@ namespace Ecommerce
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthorization(); 
+            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "areas",                    
-                    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area=Customer}/{controller=Splash}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 

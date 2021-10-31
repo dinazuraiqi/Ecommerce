@@ -49,14 +49,25 @@ namespace Ecommerce.Areas.Admin.Models
         {
             Result result = new Result();
             try
-            {
+            {              
                 var user = _db.ApplicationUsers.FirstOrDefault(c => c.Id == roleUser.UserId);
-                var isCheckRoleAssign = await _userManager.IsInRoleAsync(user, roleUser.RoleId);                
-                if (isCheckRoleAssign)
+
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                IList<string> rolesToRemove = new List<string>();
+                foreach(string roleName in currentRoles)
                 {
-                    result.ResultObject = roleUser;
-                    return result;
+                    if (roleName == roleUser.RoleId)
+                    {
+                        result.ResultObject = roleUser;
+                        return result;
+                    }
+                    rolesToRemove.Add(roleName);
                 }
+                if (rolesToRemove != null)
+                {
+                    await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                }
+                
                 await _userManager.AddToRoleAsync(user, roleUser.RoleId);
                 result.Success = true;
                 result.ResultObject = roleUser;

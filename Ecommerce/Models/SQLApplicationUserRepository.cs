@@ -56,9 +56,9 @@ namespace Ecommerce.Models
             IdentityResult result = new IdentityResult();
             user.Email = user.UserName;
             result = await _userManager.CreateAsync(user, user.PasswordHash);
-            if (result.Succeeded)
-            {
-                //var isSaveRole = await _userManager.AddToRoleAsync(user, "User");
+            if (result.Succeeded && user.UserName != "Admin@Admin.com")
+            {                
+                await _userManager.AddToRoleAsync(user, "User");                
             }
             if (result.Succeeded)
             {

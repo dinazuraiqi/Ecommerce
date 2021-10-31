@@ -1,4 +1,5 @@
-﻿using Ecommerce.Models;
+﻿using Ecommerce.Areas.Admin.Models;
+using Ecommerce.Models;
 using Ecommerce.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,11 @@ namespace Ecommerce.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IProductRepository _productRepository;
-
+        private IProductRepository _productRepository;        
         public HomeController(ILogger<HomeController> logger, IProductRepository productRepository)
         {
             _logger = logger;
-            _productRepository = productRepository;
+            _productRepository = productRepository;           
         }
 
         public IActionResult Index(int? page)

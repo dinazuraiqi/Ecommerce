@@ -1,4 +1,5 @@
-﻿using Ecommerce.Models;
+﻿using Ecommerce.Areas.Admin.Models;
+using Ecommerce.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,10 +9,11 @@ using System.Text;
 namespace Ecommerce.Data
 {
     public class ApplicationDbContext : IdentityDbContext
-    {
+    {        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            
         }
 
         public DbSet<ProductType> ProductTypes { get; set; }       
@@ -20,5 +22,6 @@ namespace Ecommerce.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        
     }
 }

@@ -146,7 +146,7 @@ namespace Ecommerce.Areas.Admin.Controllers
             else if (result.Success)
             {
                 TempData["save"] = "User Role assigned.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AssignUserRole));
             }
             return View();
         }
