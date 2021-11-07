@@ -99,10 +99,7 @@ namespace Ecommerce.Areas.Identity.Pages.Account
                                         UserName = Input.Email,
                                         RoleName = r.Name
                                     }).FirstOrDefault();
-                    if (roleInfo != null)
-                    {
-                        HttpContext.Session.SetString("roleName", roleInfo.RoleName);
-                    }
+                    
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

@@ -1,6 +1,8 @@
 ﻿@model Product
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit";    
+    TempData["Image"] = Model.Image;
+
 }
 
 <br />
@@ -35,10 +37,9 @@
                 <div class="col-4">
                     <label asp-for="Image"></label>
                 </div>
-                <div class="col-8">
-                    <input asp-for="Image" class="form-control" type="file" />
-                </div>
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <div class="col-8">                    
+                    <input id="img" asp-for="Image" class="form-control" type="file" />
+                </div>   
             </div>
             <div class="form-group row">
                 <div class="col-4">
@@ -90,7 +91,7 @@
 </form>
 
 @section Scripts{
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}     
 }
 
 

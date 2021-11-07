@@ -26,7 +26,7 @@ namespace Ecommerce
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                    .UseIISIntegration()
+                    //.UseIISIntegration()
                     .UseStartup<Startup>();
                     
                    

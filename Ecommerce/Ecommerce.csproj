@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>aspnet-Ecommerce-982F7700-ED9B-4D62-A5B9-CC0D21FC7B8C</UserSecretsId>
+    <UserSecretsId>aspnet-Ecommerce-982F7700-ED9B-4D62-A5B9-CC0D21FC7B8C</UserSecretsId>        
   </PropertyGroup>
 
   <ItemGroup>

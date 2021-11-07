@@ -66,8 +66,11 @@ namespace Ecommerce.Areas.Admin.Controllers
                 if (image != null)
                 {
                     var name = Path.Combine(_he.WebRootPath + "/Images", Path.GetFileName(image.FileName));
-                    await image.CopyToAsync(new FileStream(name, FileMode.Create));
-                    product.Image = "Images/" + image.FileName;
+                    using (var stream = new FileStream(name, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                        product.Image = "Images/" + image.FileName;
+                    }
                 }
 
                 if (image == null)
@@ -104,16 +107,20 @@ namespace Ecommerce.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 if (image != null)
-                {
+                {                                       
                     var name = Path.Combine(_he.WebRootPath + "/Images", Path.GetFileName(image.FileName));
-                    await image.CopyToAsync(new FileStream(name, FileMode.Create));
-                    product.Image = "Images/" + image.FileName;
+                    using (var stream = new FileStream(name, FileMode.Create)) {
+                        await image.CopyToAsync(stream);
+                        product.Image = "Images/" + image.FileName;
+                    }                                
+                                                           
                 }
 
                 if (image == null)
-                {
-                    product.Image = "Images/noimage.PNG";
+                {                    
+                    product.Image = TempData["Image"].ToString();
                 }
+
                 var result = await _productRepository.Update(product);
                 if (result.Success == true)
                 {
