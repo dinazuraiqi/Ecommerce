@@ -109,15 +109,18 @@ namespace Ecommerce.Controllers
         public IActionResult Cart()
         {
             List<Product> products = HttpContext.Session.Get<List<Product>>("products");
-            foreach (var product in products)
+            if (products != null)
             {
-                product.TotalPrice = product.Price;
-                if (product.Quantity != 1 )
+                foreach (var product in products)
                 {
-                    product.Price = product.TotalPrice / product.Quantity;
-                }               
-            }
-            if (products == null)
+                    product.TotalPrice = product.Price;
+                    if (product.Quantity != 1)
+                    {
+                        product.Price = product.TotalPrice / product.Quantity;
+                    }
+                }
+            }                
+            else 
             {
                 products = new List<Product>();
             }
