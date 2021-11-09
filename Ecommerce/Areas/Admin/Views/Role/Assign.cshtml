@@ -16,7 +16,7 @@
             </div>
             <div class="col-5">
                 <select asp-for="UserId" asp-items="ViewBag.UserId" class="form-control">
-                    <option selected="selected">Select</option>
+                    <option selected="selected" value="">Select</option>
                 </select>               
             </div>
             <span asp-validation-for="UserId" class="text-danger"></span>
@@ -27,7 +27,7 @@
             </div>
             <div class="col-5">
                 <select asp-for="RoleId" asp-items="ViewBag.RoleId" class="form-control">
-                    <option selected="selected">Select</option>
+                    <option selected="selected" value="">Select</option>
                 </select>               
             </div>
             <span asp-validation-for="RoleId" class="text-danger"></span>
