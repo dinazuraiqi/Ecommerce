@@ -18,7 +18,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger">
 
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <div class="form-group row">
                 <div class="col-4">
                     <label asp-for="Name"></label>
@@ -74,7 +74,7 @@
 
         </div>
 
-        <div class="col-6">
+        <div class="col-md-6">
             <table id="orders" class="table table-bordered">
                 <thead>
                     <tr>
@@ -89,7 +89,7 @@
                     {
                     <tr onclick="getIndex(this)">
                         <td>
-                            <img src="~/@item.Image" height="100px" width="150px" />
+                            <img src="~/@item.Image" height="100px" width="100%" />
                         </td>
                         <td>@item.Name</td>
                         <td>@item.Quantity</td>

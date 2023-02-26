@@ -10,8 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Ecommerce.Interfaces;
+using Ecommerce.Models;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Repositories
 {
     public class SQLApplicationUserRepository : IApplicationUserRepository
     {
@@ -43,26 +45,26 @@ namespace Ecommerce.Models
                     result.Success = true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-                                                  
+
             return result;
         }
-        
+
         public async Task<IdentityResult> Add(ApplicationUser user)
         {
             IdentityResult result = new IdentityResult();
             user.Email = user.UserName;
             result = await _userManager.CreateAsync(user, user.PasswordHash);
             if (result.Succeeded && user.UserName != "Admin@Admin.com")
-            {                
-                await _userManager.AddToRoleAsync(user, "User");                
+            {
+                await _userManager.AddToRoleAsync(user, "User");
             }
             if (result.Succeeded)
             {
-                _logger.LogInformation("User created a new account with password.");                            
+                _logger.LogInformation("User created a new account with password.");
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
@@ -81,13 +83,13 @@ namespace Ecommerce.Models
                     context.ApplicationUsers.Remove(userToDelete);
                     context.SaveChanges();
                     result.Success = true;
-                }                
+                }
             }
             catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-            
+
             return result;
         }
 
@@ -137,15 +139,15 @@ namespace Ecommerce.Models
         {
             IdentityResult result = null;
             ApplicationUser userToUpdate = context.ApplicationUsers.Find(userChanges.Id);
-            if(userToUpdate !=null)
-            {                 
+            if (userToUpdate != null)
+            {
                 userToUpdate.FirstName = userChanges.FirstName;
                 userToUpdate.LastName = userChanges.LastName;
                 if (userToUpdate != null)
                 {
                     result = await _userManager.UpdateAsync(userToUpdate);
                 }
-            }          
+            }
             return result;
         }
     }

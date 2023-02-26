@@ -1,19 +1,21 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.Interfaces;
+using Ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Repositories
 {
     public class SQLProductRepository : IProductRepository
     {
-        private readonly ApplicationDbContext context;        
+        private readonly ApplicationDbContext context;
 
         public SQLProductRepository(ApplicationDbContext context)
         {
-            this.context = context;           
+            this.context = context;
         }
         public async Task<Result> Add(Product product)
         {
@@ -22,18 +24,18 @@ namespace Ecommerce.Models
             {
                 var searchProduct = context.Products.FirstOrDefault(p => p.Name == product.Name);
                 if (searchProduct == null)
-                {                   
+                {
                     context.Products.Add(product);
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = product;
-                }                               
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-           
+
             return result;
         }
 
@@ -48,19 +50,19 @@ namespace Ecommerce.Models
                     result.ResultObject = product;
                     context.Products.Remove(product);
                     await context.SaveChangesAsync();
-                    result.Success = true;                    
+                    result.Success = true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-            
+
             return result;
         }
 
         public IEnumerable<Product> GetAllProducts()
-        {           
+        {
             return context.Products.Include(c => c.ProductType).Include(c => c.SpecialTag).ToList();
         }
 
@@ -83,7 +85,7 @@ namespace Ecommerce.Models
 
         }
 
-        public Product GetProduct(string  name)
+        public Product GetProduct(string name)
         {
             return context.Products.FirstOrDefault(c => c.Name == name);
 
@@ -97,17 +99,17 @@ namespace Ecommerce.Models
                 var product = context.Products.Attach(productChanges);
                 if (product != null)
                 {
-                    result.ResultObject = productChanges;                                     
-                    product.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    result.ResultObject = productChanges;
+                    product.State = EntityState.Modified;
                     await context.SaveChangesAsync();
                     result.Success = true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-            
+
             return result;
         }
     }

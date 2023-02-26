@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.Interfaces;
+using Ecommerce.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Repositories
 {
     public class SQLProductTypeRepository : IProductTypeRepository
     {
@@ -26,9 +28,9 @@ namespace Ecommerce.Models
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = productType;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
@@ -49,7 +51,7 @@ namespace Ecommerce.Models
                     result.Success = true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
@@ -78,9 +80,9 @@ namespace Ecommerce.Models
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = productTypeChanges;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }

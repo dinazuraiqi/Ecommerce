@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.Interfaces;
+using Ecommerce.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Repositories
 {
     public class SQLOrderDetailsRepository : IOrderDetailsRepository
     {
@@ -26,13 +28,13 @@ namespace Ecommerce.Models
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = orderDetails;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-          
+
             return result;
         }
 
@@ -50,11 +52,11 @@ namespace Ecommerce.Models
                     result.Success = true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-           
+
             return result;
         }
 
@@ -81,9 +83,9 @@ namespace Ecommerce.Models
                     result.Success = true;
                     result.ResultObject = orderDetailsChanges;
                 }
-               
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }

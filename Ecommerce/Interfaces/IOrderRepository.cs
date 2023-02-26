@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ecommerce.Models;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Interfaces
 {
     public interface IOrderRepository
     {
@@ -12,5 +13,7 @@ namespace Ecommerce.Models
         Task<Result> Add(Order order);
         Task<Result> Update(Order orderChanges);
         Task<Result> Delete(int Id);
+        long GetMaxOrderNo();
+
     }
 }

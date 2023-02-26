@@ -19,7 +19,7 @@ namespace Ecommerce.Models
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("ecommerce2120@gmail.com", "p@ssword2021")           
+                Credentials = new NetworkCredential("ecommerce2120@gmail.com", "anylvcuirphcufhn")           
 
             };
 

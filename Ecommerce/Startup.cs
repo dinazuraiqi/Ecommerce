@@ -1,6 +1,9 @@
 using Ecommerce.Areas.Admin.Models;
 using Ecommerce.Data;
+using Ecommerce.Interfaces;
 using Ecommerce.Models;
+using Ecommerce.Repositories;
+using Ecommerce.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +48,7 @@ namespace Ecommerce
             services.AddScoped<IOrderDetailsRepository, SQLOrderDetailsRepository>();
             services.AddScoped<IApplicationUserRepository, SQLApplicationUserRepository>();
             services.AddScoped<IRoleRepository, SQLRoleRepository>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.

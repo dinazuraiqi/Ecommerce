@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.Interfaces;
+using Ecommerce.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Repositories
 {
     public class SQLSpecialTagRepository : ISpecialTagRepository
     {
@@ -20,19 +22,19 @@ namespace Ecommerce.Models
             try
             {
                 SpecialTag specialTagExist = context.SpecialTags.Find(specialTag.Id);
-                if(specialTagExist == null)
+                if (specialTagExist == null)
                 {
                     context.SpecialTags.Add(specialTag);
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = specialTag;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-           
+
             return result;
         }
 
@@ -50,10 +52,10 @@ namespace Ecommerce.Models
                     result.ResultObject = specialTag;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
-            }           
+            }
             return result;
         }
 
@@ -73,19 +75,19 @@ namespace Ecommerce.Models
             try
             {
                 var specialTag = context.SpecialTags.Attach(specialTagChanges);
-                if(specialTag != null)
+                if (specialTag != null)
                 {
                     specialTag.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = specialTagChanges;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-            
+
             return result;
         }
     }

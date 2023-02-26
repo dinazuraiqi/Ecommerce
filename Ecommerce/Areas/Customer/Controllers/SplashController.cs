@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Areas.Admin.Models;
 using Ecommerce.Data;
+using Ecommerce.Interfaces;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

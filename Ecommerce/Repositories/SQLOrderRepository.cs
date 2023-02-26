@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Data;
+using Ecommerce.Interfaces;
+using Ecommerce.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Models
+namespace Ecommerce.Repositories
 {
     public class SQLOrderRepository : IOrderRepository
     {
@@ -26,13 +28,13 @@ namespace Ecommerce.Models
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = order;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-            
+
             return result;
         }
 
@@ -47,20 +49,34 @@ namespace Ecommerce.Models
                     result.ResultObject = order;
                     context.Orders.Remove(order);
                     await context.SaveChangesAsync();
-                    result.Success = true;                   
+                    result.Success = true;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
             }
-            
+
             return result; ;
         }
 
         public IEnumerable<Order> GetAllOrders()
         {
             return context.Orders;
+        }
+
+        public long GetMaxOrderNo()
+        {
+            try
+            {
+                var result = context.Orders.Max(o => o.OrderNo);
+                return result;
+            }
+            catch(Exception e)
+            {
+                return 0;
+            }
+            
         }
 
         public Order GetOrder(int Id)
@@ -80,13 +96,13 @@ namespace Ecommerce.Models
                     await context.SaveChangesAsync();
                     result.Success = true;
                     result.ResultObject = orderChanges;
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 result.ErrorMessage = e.Message;
-            }          
-            
+            }
+
             return result;
         }
     }

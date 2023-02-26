@@ -1,0 +1,28 @@
+﻿@model List<Order>
+@{
+}
+
+<h1>Orders List</h1>
+
+<table id="orders" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Order Date</th>
+                            <th>Total Price</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr onclick="getIndex(this)">
+                    <td>@item.OrderNo</td>
+                    <td>@item.Name</td>
+                    <td>@item.PhoneNo</td>
+                    <td>@item.TotalPrice</td>
+                </tr>
+        }
+                    </tbody>
+                </table>

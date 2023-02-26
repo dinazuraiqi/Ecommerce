@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,12 @@ namespace Ecommerce.Models
         }
         public int Id { get; set; }
         [Display(Name = "Order No")]
-        public string OrderNo { get; set; }
+        [Required]
+        public long OrderNo { get; set; }
+        [Required]
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
         [Required]
         public decimal TotalPrice { get; set; }
         [Required]
